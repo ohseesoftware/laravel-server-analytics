@@ -1,11 +1,13 @@
-# Very short description of the package
+# Laravel Analytics
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/ohseesoftware/laravel-analytics.svg?style=flat-square)](https://packagist.org/packages/ohseesoftware/laravel-analytics)
-[![Build Status](https://img.shields.io/travis/ohseesoftware/laravel-analytics/master.svg?style=flat-square)](https://travis-ci.org/ohseesoftware/laravel-analytics)
-[![Quality Score](https://img.shields.io/scrutinizer/g/ohseesoftware/laravel-analytics.svg?style=flat-square)](https://scrutinizer-ci.com/g/ohseesoftware/laravel-analytics)
-[![Total Downloads](https://img.shields.io/packagist/dt/ohseesoftware/laravel-analytics.svg?style=flat-square)](https://packagist.org/packages/ohseesoftware/laravel-analytics)
+[![Current Release](https://img.shields.io/github/release/ohseesoftware/laravel-analytics.svg?style=flat-square)](https://github.com/ohseesoftware/laravel-analytics/releases)
+![Build Status Badge](https://github.com/ohseesoftware/laravel-analytics/workflows/Build/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/ohseesoftware/laravel-analytics/badge.svg?branch=master)](https://coveralls.io/github/ohseesoftware/laravel-analytics?branch=master)
+[![Maintainability Score](https://img.shields.io/codeclimate/maintainability/ohseesoftware/laravel-analytics.svg?style=flat-square)](https://codeclimate.com/github/ohseesoftware/laravel-analytics)
+[![Downloads](https://img.shields.io/packagist/dt/ohseesoftware/laravel-analytics.svg?style=flat-square)](https://packagist.org/packages/ohseesoftware/laravel-analytics)
+[![MIT License](https://img.shields.io/github/license/ohseesoftware/laravel-analytics.svg?style=flat-square)](https://github.com/ohseesoftware/laravel-analytics/blob/master/LICENSE)
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
+Server side analytics for your Laravel application or website. No cookies, no tracking :)
 
 ## Installation
 
