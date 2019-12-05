@@ -1,13 +1,13 @@
 {
-    "name": "OhSeeSoftware/laravel-server-analytics",
+    "name": "oheesoftware/laravel-server-analytics",
     "description": "Server side analytics for your Laravel application or website.",
     "keywords": [
-        "OhSeeSoftware",
+        "oheesoftware",
         "laravel-server-analytics",
         "laravel",
         "analytics"
     ],
-    "homepage": "https://github.com/OhSeeSoftware/laravel-server-analytics",
+    "homepage": "https://github.com/oheesoftware/laravel-server-analytics",
     "license": "MIT",
     "type": "library",
     "authors": [
