@@ -1,13 +1,13 @@
 <?php
 
-namespace Ohseesoftware\LaravelAnalytics;
+namespace OhSeeSoftware\LaravelServerAnalytics;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Ohseesoftware\LaravelAnalytics\Skeleton\SkeletonClass
+ * @see \OhSeeSoftware\LaravelServerAnalytics\Skeleton\SkeletonClass
  */
-class LaravelAnalyticsFacade extends Facade
+class LaravelServerAnalyticsFacade extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -16,6 +16,6 @@ class LaravelAnalyticsFacade extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'laravel-analytics';
+        return 'laravel-server-analytics';
     }
 }

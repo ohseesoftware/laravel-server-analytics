@@ -1,6 +1,6 @@
 <?php
 
-namespace Ohseesoftware\LaravelAnalytics\Tests;
+namespace OhSeeSoftware\LaravelServerAnalytics\Tests;
 
 use PHPUnit\Framework\TestCase;
 

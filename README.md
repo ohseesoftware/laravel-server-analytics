@@ -1,11 +1,11 @@
 # Laravel Analytics
 
-[![Current Release](https://img.shields.io/github/release/ohseesoftware/laravel-analytics.svg?style=flat-square)](https://github.com/ohseesoftware/laravel-analytics/releases)
-![Build Status Badge](https://github.com/ohseesoftware/laravel-analytics/workflows/Build/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/ohseesoftware/laravel-analytics/badge.svg?branch=master)](https://coveralls.io/github/ohseesoftware/laravel-analytics?branch=master)
-[![Maintainability Score](https://img.shields.io/codeclimate/maintainability/ohseesoftware/laravel-analytics.svg?style=flat-square)](https://codeclimate.com/github/ohseesoftware/laravel-analytics)
-[![Downloads](https://img.shields.io/packagist/dt/ohseesoftware/laravel-analytics.svg?style=flat-square)](https://packagist.org/packages/ohseesoftware/laravel-analytics)
-[![MIT License](https://img.shields.io/github/license/ohseesoftware/laravel-analytics.svg?style=flat-square)](https://github.com/ohseesoftware/laravel-analytics/blob/master/LICENSE)
+[![Current Release](https://img.shields.io/github/release/OhSeeSoftware/laravel-server-analytics.svg?style=flat-square)](https://github.com/OhSeeSoftware/laravel-server-analytics/releases)
+![Build Status Badge](https://github.com/OhSeeSoftware/laravel-server-analytics/workflows/Build/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/OhSeeSoftware/laravel-server-analytics/badge.svg?branch=master)](https://coveralls.io/github/OhSeeSoftware/laravel-server-analytics?branch=master)
+[![Maintainability Score](https://img.shields.io/codeclimate/maintainability/OhSeeSoftware/laravel-server-analytics.svg?style=flat-square)](https://codeclimate.com/github/OhSeeSoftware/laravel-server-analytics)
+[![Downloads](https://img.shields.io/packagist/dt/OhSeeSoftware/laravel-server-analytics.svg?style=flat-square)](https://packagist.org/packages/OhSeeSoftware/laravel-server-analytics)
+[![MIT License](https://img.shields.io/github/license/OhSeeSoftware/laravel-server-analytics.svg?style=flat-square)](https://github.com/OhSeeSoftware/laravel-server-analytics/blob/master/LICENSE)
 
 Server side analytics for your Laravel application or website. No cookies, no tracking :)
 
@@ -14,7 +14,7 @@ Server side analytics for your Laravel application or website. No cookies, no tr
 You can install the package via composer:
 
 ```bash
-composer require ohseesoftware/laravel-analytics
+composer require OhSeeSoftware/laravel-server-analytics
 ```
 
 ## Usage
@@ -43,7 +43,7 @@ If you discover any security related issues, please email owen@ohseemedia.com in
 
 ## Credits
 
-- [Owen Conti](https://github.com/ohseesoftware)
+- [Owen Conti](https://github.com/OhSeeSoftware)
 - [All Contributors](../../contributors)
 
 ## License

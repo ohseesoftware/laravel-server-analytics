@@ -1,11 +1,13 @@
 {
-    "name": "ohseesoftware/laravel-analytics",
+    "name": "OhSeeSoftware/laravel-server-analytics",
     "description": "Server side analytics for your Laravel application or website.",
     "keywords": [
-        "ohseesoftware",
-        "laravel-analytics"
+        "OhSeeSoftware",
+        "laravel-server-analytics",
+        "laravel",
+        "analytics"
     ],
-    "homepage": "https://github.com/ohseesoftware/laravel-analytics",
+    "homepage": "https://github.com/OhSeeSoftware/laravel-server-analytics",
     "license": "MIT",
     "type": "library",
     "authors": [
@@ -27,12 +29,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Ohseesoftware\\LaravelAnalytics\\": "src"
+            "OhSeeSoftware\\LaravelServerAnalytics\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Ohseesoftware\\LaravelAnalytics\\Tests\\": "tests"
+            "OhSeeSoftware\\LaravelServerAnalytics\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -45,10 +47,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Ohseesoftware\\LaravelAnalytics\\LaravelAnalyticsServiceProvider"
+                "OhSeeSoftware\\LaravelServerAnalytics\\LaravelServerAnalyticsServiceProvider"
             ],
             "aliases": {
-                "LaravelAnalytics": "Ohseesoftware\\LaravelAnalytics\\LaravelAnalyticsFacade"
+                "LaravelServerAnalytics": "OhSeeSoftware\\LaravelServerAnalytics\\LaravelServerAnalyticsFacade"
             }
         }
     }
