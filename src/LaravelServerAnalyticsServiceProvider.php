@@ -3,6 +3,7 @@
 namespace OhSeeSoftware\LaravelServerAnalytics;
 
 use Illuminate\Support\ServiceProvider;
+use OhSeeSoftware\LaravelServerAnalytics\Http\Middleware\LogRequest;
 
 class LaravelServerAnalyticsServiceProvider extends ServiceProvider
 {
@@ -16,8 +17,8 @@ class LaravelServerAnalyticsServiceProvider extends ServiceProvider
          */
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'laravel-server-analytics');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-server-analytics');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
+        $this->loadRoutesFrom(__DIR__ . '/Http/routes.php');
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -56,5 +57,7 @@ class LaravelServerAnalyticsServiceProvider extends ServiceProvider
         $this->app->singleton('laravel-server-analytics', function () {
             return new LaravelServerAnalytics;
         });
+
+        $this->app->singleton(LogRequest::class);
     }
 }

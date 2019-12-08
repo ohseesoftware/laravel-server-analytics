@@ -17,6 +17,22 @@ You can install the package via composer:
 composer require ohseesoftware/laravel-server-analytics
 ```
 
+Publish the package (config, assets, etc):
+
+```bash
+php artisan vendor:publish --provider="OhSeeSoftware\LaravelServerAnalytics\LaravelServerAnalyticsServiceProvider"
+```
+
+Review the configuration file and make changes as necessary:
+
+`config/laravel-server-analytics.php`
+
+Run database migrations:
+
+```bash
+php artisan migrate
+```
+
 ## Usage
 
 ``` php
