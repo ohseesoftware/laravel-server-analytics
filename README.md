@@ -9,6 +9,22 @@
 
 Server side analytics for your Laravel application or website. No cookies, no tracking :)
 
+## Vision
+
+There are a lot of choices out there when it comes to analytics for your web project. With the progress of [GDPR](https://en.wikipedia.org/wiki/General_Data_Protection_Regulation), a focus on privacy has emerged. Consumers are now learning that they can be tracked across the web, and are not appreciative of this.
+
+As you develop your next website or project, you may wish to add analytics so you can see how many pageviews, etc you're getting. You may not care to track how a specific visitor got to your website, or the actions they took once they were there. You just want some basic metrics on the activity on your web project.
+
+You've come to the right place.
+
+### Goals
+
+* [ ] Handled entirely by the backend: this means no client-side JS to add to your site, which means no impact on performance for your users
+* [ ] Write operations are handled in an asynchronous job: tracking page views shouldn't impact request performance
+* [ ] Ships with a default dashboard to view your data: we'll give you a default dashboard (and seperate route) to view your data
+* [ ] Customizable: we'll track the main aspects of a request (path, status, params, duration, user, etc), but also allow you to attach extra data to a request (such as which entity in your database was accessed)
+* [ ] Accessible API: in addition to a default dashboard, we'll expose an API you can use to pull custom metrics out of your data
+
 ## Installation
 
 You can install the package via composer:
