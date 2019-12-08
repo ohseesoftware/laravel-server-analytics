@@ -3,7 +3,7 @@
 namespace OhSeeSoftware\LaravelServerAnalytics\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use OhSeeSoftware\LaravelServerAnalytics\LaravelServerAnalytics;
+use OhSeeSoftware\LaravelServerAnalytics\LaravelServerAnalyticsFacade;
 
 class AnalyticsRelation extends Model
 {
@@ -11,7 +11,7 @@ class AnalyticsRelation extends Model
 
     public function getTable()
     {
-        return LaravelServerAnalytics::getAnalyticsRelationTable();
+        return LaravelServerAnalyticsFacade::getAnalyticsRelationTable();
     }
 
     public function relation()

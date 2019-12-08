@@ -3,7 +3,7 @@
 namespace OhSeeSoftware\LaravelServerAnalytics\Http\Middleware;
 
 use Closure;
-use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
+use OhSeeSoftware\LaravelServerAnalytics\LaravelServerAnalyticsFacade;
 
 class LogRequest
 {
@@ -31,17 +31,12 @@ class LogRequest
      */
     public function terminate($request, $response)
     {
-        $analytics = Analytics::create([
-            'method'      => ucwords($request->getMethod()),
-            'path'        => $request->getPathInfo(),
-            'status_code' => $response->getStatusCode(),
-            'duration_ms' => round(microtime(true) * 1000) - $request->analyticsRequestStartTime,
-            'user_agent'  => $request->header('User-Agent'),
-            'ip_address'  => $request->ip()
-        ]);
-
-        if ($request->analyticsUser) {
-            $analytics->addRelation($request->analyticsUser);
+        if (!LaravelServerAnalyticsFacade::shouldTrackRequest($request)) {
+            return;
         }
+
+        $analytics = LaravelServerAnalyticsFacade::logRequest($request, $response);
+
+        LaravelServerAnalyticsFacade::runPostHooks($request, $analytics);
     }
 }
