@@ -17,9 +17,11 @@ class PostHooksTest extends TestCase
     {
         // Given
         $relatedAnalytics = factory(Analytics::class)->create();
-        LaravelServerAnalyticsFacade::addPostHook(function (Request $request, Analytics $analytics) use ($relatedAnalytics) {
-            $analytics->addRelation($relatedAnalytics);
-        });
+        LaravelServerAnalyticsFacade::addPostHook(
+            function (Request $request, Analytics $analytics) use ($relatedAnalytics) {
+                $analytics->addRelation($relatedAnalytics);
+            }
+        );
 
         $spy = Mockery::spy(function () {
             // no op

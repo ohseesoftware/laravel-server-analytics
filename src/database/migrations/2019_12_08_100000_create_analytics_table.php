@@ -1,5 +1,7 @@
 <?php
 
+namespace OhSeeSoftware\LaravelServerAnalytics;
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -24,7 +26,9 @@ class CreateAnalyticsTable extends Migration
 
         Schema::create(LaravelServerAnalyticsFacade::getAnalyticsRelationTable(), function (Blueprint $table) {
             $table->unsignedBigInteger('analytics_id');
-            $table->foreign('analytics_id')->references('id')->on(LaravelServerAnalyticsFacade::getAnalyticsDataTable());
+            $table->foreign('analytics_id')
+                ->references('id')
+                ->on(LaravelServerAnalyticsFacade::getAnalyticsDataTable());
             $table->morphs('relation');
         });
     }

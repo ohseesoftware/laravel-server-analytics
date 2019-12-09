@@ -10,4 +10,4 @@ class OverrideRequestDetails extends RequestDetails
     {
         return 'Test';
     }
-};
+}
