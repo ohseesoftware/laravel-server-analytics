@@ -4,6 +4,7 @@ namespace OhSeeSoftware\LaravelServerAnalytics\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Mockery;
 use OhSeeSoftware\LaravelServerAnalytics\ServerAnalytics;
 use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
@@ -17,7 +18,7 @@ class AnalyticsMetaTest extends TestCase
     {
         // Given
         ServerAnalytics::addPostHook(
-            function (Request $request, Analytics $analytics) {
+            function (Request $request, Response $response, Analytics $analytics) {
                 $analytics->addMeta('test', '1234');
             }
         );

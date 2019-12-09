@@ -51,17 +51,141 @@ php artisan migrate
 
 ## Usage
 
+### Basic Usage
+
+For basic request tracking, there's no custom code you need to add to your application other than including the middleware:
+
 ``` php
-// Usage description here
+// Kernel.php
+
+protected $middleware = [
+  // ... other middlware here
+  \OhSeeSoftware\LaravelServerAnalytics\Http\Middleware\LogRequest::class,
+];
 ```
 
-### Testing
+If you want to only track a specific middleware group, add it to that group instead of the global `$middleware` variable.
+
+### Excluding Routes
+
+If you'd like to exclude specific routes (or wildcards) from being tracked, you can do so via the `addRouteExclusions()` method:
+
+```php
+// AppServiceProvider
+
+public function boot()
+{
+    // Do not track `/home` or `/login` routes
+    ServerAnalytics::addRouteExclusions([
+      '/home',
+      '/login'
+    ]);
+}
+```
+
+### Excluding Request Methods
+
+If you'd like to exclude specific request methods from being tracked, you can do so via the `addMethodExclusions()` method:
+
+```php
+// AppServiceProvider
+
+public function boot()
+{
+    // Do not track `POST` or `PUT` requests
+    ServerAnalytics::addMethodExclusions(['POST', 'PUT']);
+}
+```
+
+### Post Request Hooks
+
+We provide an optional hook you can use to run custom logic after an Analytics record has been created. You can provide as many hooks as you want, calling `addPostHook` will add a new hook rather than replace existing hooks.
+
+```php
+// AppServiceProvider
+
+public function boot()
+{
+    ServerAnalytics::addPostHook(
+        function (Request $request, Response $response, Analytics $analytics) {
+            // Do whatever you want with the request, response, and created analytics record
+        }
+    );
+}
+```
+
+### Attach Entities to Analytics Records
+
+If you want to attach your application's entities to an analytics record, you can use the `addRelation(Model $model)` on the Analytics model in combination with a hook:
+
+```php
+// AppServiceProvider
+
+public function boot()
+{
+    ServerAnalytics::addPostHook(
+        function (Request $request, Response $response, Analytics $analytics) {
+            // Attach the logged-in user to the analytics request record
+            if ($user = $request->user()) {
+              $analytics->addRelation($user);
+            }
+        }
+    );
+}
+```
+
+### Attach Meta to Analytics Records
+
+In addition to attaching entities to your analytics records, you can attach custom metadata (key/value).
+
+```php
+// AppServiceProvider
+
+public function boot()
+{
+    ServerAnalytics::addPostHook(
+        function (Request $request, Response $response, Analytics $analytics) {
+            $analytics->addMeta('foo', 'bar');
+        }
+    );
+}
+```
+
+### Providing Custom Request Details
+
+We provide sensible defaults for pulling details for the request. However, if you need to pull the details in a different manner, you can provide a custom implementation of the `RequestDetails` class:
+
+```php
+
+// CustomRequestDetails.php
+
+use OhSeeSoftware\LaravelServerAnalytics\RequestDetails;
+
+class CustomRequestDetails extends RequestDetails
+{
+    public function getMethod(): string
+    {
+        return 'TEST';
+    }
+}
+
+// AppServiceProvider
+
+public function boot()
+{
+    ServerAnalytics::setRequestDetails(new CustomRequestDetails);
+}
+```
+
+With the above example, the `method` variable for every request will be set to "TEST".
+
+## Testing
 
 ``` bash
-composer test
+./vendor/bin/phpunit
 ```
 
-### Changelog
+## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
 

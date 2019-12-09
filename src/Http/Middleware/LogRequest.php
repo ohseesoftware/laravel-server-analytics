@@ -35,8 +35,6 @@ class LogRequest
             return;
         }
 
-        $analytics = ServerAnalytics::logRequest($request, $response);
-
-        ServerAnalytics::runPostHooks($request, $analytics);
+        ServerAnalytics::logRequest($request, $response);
     }
 }

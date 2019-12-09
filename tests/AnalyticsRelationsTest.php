@@ -4,6 +4,7 @@ namespace OhSeeSoftware\LaravelServerAnalytics\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Mockery;
 use OhSeeSoftware\LaravelServerAnalytics\ServerAnalytics;
 use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
@@ -18,7 +19,7 @@ class AnalyticsRelationsTest extends TestCase
         // Given
         $relatedAnalytics = factory(Analytics::class)->create();
         ServerAnalytics::addPostHook(
-            function (Request $request, Analytics $analytics) use ($relatedAnalytics) {
+            function (Request $request, Response $response, Analytics $analytics) use ($relatedAnalytics) {
                 $analytics->addRelation($relatedAnalytics);
             }
         );

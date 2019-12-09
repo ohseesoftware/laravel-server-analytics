@@ -13,10 +13,10 @@ class LaravelServerAnalytics
     public $requestDetails;
 
     /** @var array */
-    public $exceptRoutes = [];
+    public $excludeRoutes = [];
 
     /** @var array */
-    public $exceptMethods = [];
+    public $excludeMethods = [];
 
     /** @var array */
     public $postHooks = [];
@@ -75,9 +75,9 @@ class LaravelServerAnalytics
      * @param array $routes
      * @return void
      */
-    public function addRouteExceptions(array $routes)
+    public function addRouteExclusions(array $routes)
     {
-        $this->exceptRoutes = array_merge($this->exceptRoutes, $routes);
+        $this->excludeRoutes = array_merge($this->excludeRoutes, $routes);
     }
 
     /**
@@ -86,13 +86,13 @@ class LaravelServerAnalytics
      * @param array $methods
      * @return void
      */
-    public function addMethodExceptions(array $methods)
+    public function addMethodExclusions(array $methods)
     {
         $methods = array_map(function ($method) {
             return strtoupper($method);
         }, $methods);
 
-        $this->exceptMethods = array_merge($this->exceptMethods, $methods);
+        $this->excludeMethods = array_merge($this->excludeMethods, $methods);
     }
 
     /**
@@ -103,7 +103,7 @@ class LaravelServerAnalytics
      */
     public function shouldTrackRequest(Request $request)
     {
-        if ($this->inExceptRoutesArray($request) || $this->inExceptMethodsArray($request)) {
+        if ($this->inExcludeRoutesArray($request) || $this->inExcludeMethodsArray($request)) {
             return false;
         }
 
@@ -127,14 +127,14 @@ class LaravelServerAnalytics
      * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
-    public function inExceptRoutesArray(Request $request)
+    public function inExcludeRoutesArray(Request $request)
     {
-        foreach ($this->exceptRoutes as $except) {
-            if ($except !== '/') {
-                $except = trim($except, '/');
+        foreach ($this->excludeRoutes as $route) {
+            if ($route !== '/') {
+                $route = trim($route, '/');
             }
 
-            if ($request->fullUrlIs($except) || $request->is($except)) {
+            if ($request->fullUrlIs($route) || $request->is($route)) {
                 return true;
             }
         }
@@ -148,10 +148,10 @@ class LaravelServerAnalytics
      * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
-    public function inExceptMethodsArray(Request $request)
+    public function inExcludeMethodsArray(Request $request)
     {
         $method = strtoupper($request->method());
-        return in_array($method, $this->exceptMethods);
+        return in_array($method, $this->excludeMethods);
     }
 
     /**
@@ -175,20 +175,11 @@ class LaravelServerAnalytics
             'referrer'    => $this->requestDetails->getReferrer(),
             'duration_ms' => round(microtime(true) * 1000) - $request->analyticsRequestStartTime,
         ]);
-        return $analytics;
-    }
 
-    /**
-     * Runs the post hooks.
-     *
-     * @param Request $request
-     * @param Analytics $analytics
-     * @return void
-     */
-    public function runPostHooks(Request $request, Analytics $analytics)
-    {
         foreach ($this->postHooks as $hook) {
-            call_user_func($hook, $request, $analytics);
+            call_user_func($hook, $request, $response, $analytics);
         }
+
+        return $analytics;
     }
 }
