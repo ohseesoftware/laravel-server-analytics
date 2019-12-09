@@ -41,7 +41,9 @@ php artisan vendor:publish --provider="OhSeeSoftware\LaravelServerAnalytics\Lara
 
 Review the configuration file and make changes as necessary:
 
-`config/laravel-server-analytics.php`
+```bash
+config/laravel-server-analytics.php
+```
 
 Run database migrations:
 
@@ -75,10 +77,10 @@ If you'd like to exclude specific routes (or wildcards) from being tracked, you 
 
 public function boot()
 {
-    // Do not track `/home` or `/login` routes
+    // Do not track `/home` or `/admin/*` routes
     ServerAnalytics::addRouteExclusions([
       '/home',
-      '/login'
+      '/admin/*'
     ]);
 }
 ```
@@ -99,7 +101,7 @@ public function boot()
 
 ### Post Request Hooks
 
-We provide an optional hook you can use to run custom logic after an Analytics record has been created. You can provide as many hooks as you want, calling `addPostHook` will add a new hook rather than replace existing hooks.
+We provide an optional hook you can use to run custom logic after an analytics record has been created. You can provide as many hooks as you want, calling `addPostHook` will add a new hook rather than replace existing hooks.
 
 ```php
 // AppServiceProvider
