@@ -8,12 +8,12 @@ use Mockery;
 use OhSeeSoftware\LaravelServerAnalytics\ServerAnalytics;
 use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
 
-class PostHooksTest extends TestCase
+class AnalyticsRelationsTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function it_runs_custom_post_hooks()
+    public function it_saves_relations_for_analytics()
     {
         // Given
         $relatedAnalytics = factory(Analytics::class)->create();
@@ -23,19 +23,10 @@ class PostHooksTest extends TestCase
             }
         );
 
-        $spy = Mockery::spy(function () {
-            // no op
-        });
-        ServerAnalytics::addPostHook($spy);
-
         // When
         $this->get('/analytics');
 
         // Then
-        $spy->shouldHaveBeenCalled();
-        $this->assertDatabaseHas(ServerAnalytics::getAnalyticsDataTable(), [
-            'id' => 2
-        ]);
         $this->assertDatabaseHas(ServerAnalytics::getAnalyticsRelationTable(), [
             'analytics_id'  => 2,
             'relation_id'   => $relatedAnalytics->id,

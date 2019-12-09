@@ -4,7 +4,7 @@ namespace OhSeeSoftware\LaravelServerAnalytics\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
-use OhSeeSoftware\LaravelServerAnalytics\LaravelServerAnalyticsFacade;
+use OhSeeSoftware\LaravelServerAnalytics\ServerAnalytics;
 
 class MethodExceptionsTest extends TestCase
 {
@@ -16,16 +16,16 @@ class MethodExceptionsTest extends TestCase
         $spy = Mockery::spy(function () {
             // no op
         });
-        LaravelServerAnalyticsFacade::addPostHook($spy);
+        ServerAnalytics::addPostHook($spy);
 
         // Given
-        LaravelServerAnalyticsFacade::addMethodExceptions(['POST']);
+        ServerAnalytics::addMethodExceptions(['POST']);
 
         // When
         $this->get('/analytics');
 
         // Then
-        $this->assertDatabaseHas(LaravelServerAnalyticsFacade::getAnalyticsDataTable(), [
+        $this->assertDatabaseHas(ServerAnalytics::getAnalyticsDataTable(), [
             'id' => 1
         ]);
     }
@@ -34,13 +34,13 @@ class MethodExceptionsTest extends TestCase
     public function it_excludes_specific_methods_from_tracking()
     {
         // Given
-        LaravelServerAnalyticsFacade::addMethodExceptions(['GET']);
+        ServerAnalytics::addMethodExceptions(['GET']);
 
         // When
         $this->get('/analytics');
 
         // Then
-        $this->assertDatabaseMissing(LaravelServerAnalyticsFacade::getAnalyticsDataTable(), [
+        $this->assertDatabaseMissing(ServerAnalytics::getAnalyticsDataTable(), [
             'id' => 1
         ]);
     }

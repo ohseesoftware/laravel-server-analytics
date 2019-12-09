@@ -47,6 +47,16 @@ class LaravelServerAnalytics
     }
 
     /**
+     * Returns the name of the analytics meta table.
+     *
+     * @return string
+     */
+    public static function getAnalyticsMetaTable(): string
+    {
+        return config('laravel-server-analytics.analytics_meta_table');
+    }
+
+    /**
      * Sets the request details class.
      *
      * @param RequestDetails

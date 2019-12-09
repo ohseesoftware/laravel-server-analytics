@@ -3,7 +3,7 @@
 namespace OhSeeSoftware\LaravelServerAnalytics\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use OhSeeSoftware\LaravelServerAnalytics\LaravelServerAnalyticsFacade;
+use OhSeeSoftware\LaravelServerAnalytics\ServerAnalytics;
 
 class RouteExceptionsTest extends TestCase
 {
@@ -13,13 +13,13 @@ class RouteExceptionsTest extends TestCase
     public function it_tracks_route_if_not_in_excludes_array()
     {
         // Given
-        LaravelServerAnalyticsFacade::addRouteExceptions(['/home']);
+        ServerAnalytics::addRouteExceptions(['/home']);
 
         // When
         $this->get('/analytics');
 
         // Then
-        $this->assertDatabaseHas(LaravelServerAnalyticsFacade::getAnalyticsDataTable(), [
+        $this->assertDatabaseHas(ServerAnalytics::getAnalyticsDataTable(), [
             'id' => 1
         ]);
     }
@@ -28,13 +28,13 @@ class RouteExceptionsTest extends TestCase
     public function it_excludes_specific_routes_from_tracking()
     {
         // Given
-        LaravelServerAnalyticsFacade::addRouteExceptions(['/analytics']);
+        ServerAnalytics::addRouteExceptions(['/analytics']);
 
         // When
         $this->get('/analytics');
 
         // Then
-        $this->assertDatabaseMissing(LaravelServerAnalyticsFacade::getAnalyticsDataTable(), [
+        $this->assertDatabaseMissing(ServerAnalytics::getAnalyticsDataTable(), [
             'id' => 1
         ]);
     }
@@ -43,13 +43,13 @@ class RouteExceptionsTest extends TestCase
     public function it_excludes_wildcard_routes_from_tracking()
     {
         // Given
-        LaravelServerAnalyticsFacade::addRouteExceptions(['/test/*']);
+        ServerAnalytics::addRouteExceptions(['/test/*']);
 
         // When
         $this->get('/test/1234');
 
         // Then
-        $this->assertDatabaseMissing(LaravelServerAnalyticsFacade::getAnalyticsDataTable(), [
+        $this->assertDatabaseMissing(ServerAnalytics::getAnalyticsDataTable(), [
             'id' => 1
         ]);
     }

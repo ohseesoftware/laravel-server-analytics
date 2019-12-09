@@ -3,8 +3,8 @@
 namespace OhSeeSoftware\LaravelServerAnalytics\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use OhSeeSoftware\LaravelServerAnalytics\LaravelServerAnalyticsFacade;
 use OhSeeSoftware\LaravelServerAnalytics\RequestDetails;
+use OhSeeSoftware\LaravelServerAnalytics\ServerAnalytics;
 
 class RequestDetailsTest extends TestCase
 {
@@ -13,8 +13,7 @@ class RequestDetailsTest extends TestCase
     /** @test */
     public function it_allows_overriding_request_details_class()
     {
-        $override = new class extends RequestDetails
-        {
+        $override = new class extends RequestDetails {
             public function getMethod(): string
             {
                 return 'Test';
@@ -22,13 +21,13 @@ class RequestDetailsTest extends TestCase
         };
 
         // Given
-        LaravelServerAnalyticsFacade::setRequestDetails($override);
+        ServerAnalytics::setRequestDetails($override);
 
         // When
         $this->get('/analytics');
 
         // Then
-        $this->assertDatabaseHas(LaravelServerAnalyticsFacade::getAnalyticsDataTable(), [
+        $this->assertDatabaseHas(ServerAnalytics::getAnalyticsDataTable(), [
             'id'           => 1,
             'method'       => 'Test',
         ]);

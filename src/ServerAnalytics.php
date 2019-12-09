@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @see \OhSeeSoftware\LaravelServerAnalytics\Skeleton\SkeletonClass
  */
-class LaravelServerAnalyticsFacade extends Facade
+class ServerAnalytics extends Facade
 {
     /**
      * Get the registered name of the component.

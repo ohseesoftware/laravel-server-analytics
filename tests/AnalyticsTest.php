@@ -4,7 +4,7 @@ namespace OhSeeSoftware\LaravelServerAnalytics\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
-use OhSeeSoftware\LaravelServerAnalytics\LaravelServerAnalyticsFacade;
+use OhSeeSoftware\LaravelServerAnalytics\ServerAnalytics;
 
 class AnalyticsTest extends TestCase
 {
@@ -17,7 +17,7 @@ class AnalyticsTest extends TestCase
         $this->get('/analytics');
 
         // Then
-        $this->assertDatabaseHas(LaravelServerAnalyticsFacade::getAnalyticsDataTable(), [
+        $this->assertDatabaseHas(ServerAnalytics::getAnalyticsDataTable(), [
             'id'           => 1,
             'path'         => '/analytics',
             'method'       => 'GET',

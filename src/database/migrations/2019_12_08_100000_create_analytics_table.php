@@ -1,17 +1,17 @@
 <?php
 
-namespace OhSeeSoftware\LaravelServerAnalytics;
+// phpcs:ignoreFile
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use OhSeeSoftware\LaravelServerAnalytics\LaravelServerAnalyticsFacade;
+use OhSeeSoftware\LaravelServerAnalytics\ServerAnalytics;
 
 class CreateAnalyticsTable extends Migration
 {
     public function up()
     {
-        Schema::create(LaravelServerAnalyticsFacade::getAnalyticsDataTable(), function (Blueprint $table) {
+        Schema::create(ServerAnalytics::getAnalyticsDataTable(), function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('path');
             $table->string('method');
@@ -24,18 +24,28 @@ class CreateAnalyticsTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create(LaravelServerAnalyticsFacade::getAnalyticsRelationTable(), function (Blueprint $table) {
+        Schema::create(ServerAnalytics::getAnalyticsRelationTable(), function (Blueprint $table) {
             $table->unsignedBigInteger('analytics_id');
             $table->foreign('analytics_id')
                 ->references('id')
-                ->on(LaravelServerAnalyticsFacade::getAnalyticsDataTable());
+                ->on(ServerAnalytics::getAnalyticsDataTable());
             $table->morphs('relation');
+        });
+
+        Schema::create(ServerAnalytics::getAnalyticsMetaTable(), function (Blueprint $table) {
+            $table->unsignedBigInteger('analytics_id');
+            $table->foreign('analytics_id')
+                ->references('id')
+                ->on(ServerAnalytics::getAnalyticsDataTable());
+            $table->string('key');
+            $table->text('value')->nullable();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists(LaravelServerAnalyticsFacade::getAnalyticsRelationTable());
-        Schema::dropIfExists(LaravelServerAnalyticsFacade::getAnalyticsDataTable());
+        Schema::dropIfExists(ServerAnalytics::getAnalyticsMetaTable());
+        Schema::dropIfExists(ServerAnalytics::getAnalyticsRelationTable());
+        Schema::dropIfExists(ServerAnalytics::getAnalyticsDataTable());
     }
 }
