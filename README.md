@@ -21,8 +21,8 @@ You've come to the right place.
 
 * [x] Handled entirely by the backend: this means no client-side JS to add to your site, which means no impact on performance for your users
 * [x] Write operations should not impact request performance
+* [x] Customizable: we'll track the main aspects of a request (path, status, params, duration, user, etc), but also allow you to attach extra data to a request (such as which entity in your database was accessed or metadata)
 * [ ] Ships with a default dashboard to view your data: we'll give you a default dashboard (and seperate route) to view your data
-* [ ] Customizable: we'll track the main aspects of a request (path, status, params, duration, user, etc), but also allow you to attach extra data to a request (such as which entity in your database was accessed)
 * [ ] Accessible API: in addition to a default dashboard, we'll expose an API you can use to pull custom metrics out of your data
 
 ## Installation
