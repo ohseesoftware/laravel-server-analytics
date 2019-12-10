@@ -181,6 +181,37 @@ public function boot()
 
 With the above example, the `method` variable for every request will be set to "TEST".
 
+### Querying Analytics Records
+
+You can use the `AnalyticsRepository` to query data out of the analytics tables. If you need to build a custom query, you can use the `query()` method on the repository instance.
+
+```php
+public function loadAnalytics(AnalyticsRepository $analytics)
+{
+    $records = $analytics->query()->where('method', 'GET')->get();
+}
+```
+
+There's also a couple query scopes setup on the `Analytics` model.
+
+Filter Analytics records that are related to the a given model:
+
+```php
+$analytics = Analytics::relatedTo($user);
+```
+
+Filter Analytics records that have metadata with a given key:
+
+```php
+$analytics = Analytics::hasMeta('foo');
+```
+
+Filter Analytics records that have a given metadata key/value pair:
+
+```php
+$analytics = Analytics::withMetaValue('foo', 'bar');
+```
+
 ## Testing
 
 ``` bash
