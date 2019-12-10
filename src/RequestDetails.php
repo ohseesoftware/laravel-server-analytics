@@ -82,4 +82,14 @@ class RequestDetails
     {
         return $this->request->header('referer', null);
     }
+
+    /**
+     * Returns the query parameters for the request.
+     *
+     * @return array|null
+     */
+    public function getQueryParams(): ?array
+    {
+        return $this->request->query();
+    }
 }

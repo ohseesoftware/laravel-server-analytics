@@ -14,6 +14,10 @@ class Analytics extends Model
 
     protected $fillable = ['path', 'method', 'status_code', 'duration_ms', 'user_agent', 'query_params', 'ip_address'];
 
+    protected $casts = [
+        'query_params' => 'array'
+    ];
+
     /**
      * Adds a new relation to the analytics record.
      *

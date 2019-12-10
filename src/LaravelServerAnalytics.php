@@ -167,13 +167,14 @@ class LaravelServerAnalytics
         $this->requestDetails->setResponse($response);
 
         $analytics = Analytics::create([
-            'method'      => $this->requestDetails->getMethod(),
-            'path'        => $this->requestDetails->getPath(),
-            'status_code' => $this->requestDetails->getStatusCode(),
-            'user_agent'  => $this->requestDetails->getUserAgent(),
-            'ip_address'  => $this->requestDetails->getIpAddress(),
-            'referrer'    => $this->requestDetails->getReferrer(),
-            'duration_ms' => round(microtime(true) * 1000) - $request->analyticsRequestStartTime,
+            'method'       => $this->requestDetails->getMethod(),
+            'path'         => $this->requestDetails->getPath(),
+            'status_code'  => $this->requestDetails->getStatusCode(),
+            'user_agent'   => $this->requestDetails->getUserAgent(),
+            'ip_address'   => $this->requestDetails->getIpAddress(),
+            'referrer'     => $this->requestDetails->getReferrer(),
+            'query_params' => $this->requestDetails->getQueryParams(),
+            'duration_ms'  => round(microtime(true) * 1000) - $request->analyticsRequestStartTime,
         ]);
 
         foreach ($this->postHooks as $hook) {
