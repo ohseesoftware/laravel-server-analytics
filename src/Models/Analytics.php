@@ -2,6 +2,7 @@
 
 namespace OhSeeSoftware\LaravelServerAnalytics\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use OhSeeSoftware\LaravelServerAnalytics\ServerAnalytics;
 
@@ -47,6 +48,52 @@ class Analytics extends Model
         ]);
         $this->meta()->save($meta);
         return $meta;
+    }
+
+    /**
+     * Scopes the query to include Analytics records
+     * that are related to the given Model.
+     *
+     * @param Builder $builder
+     * @param Model $model
+     * @return void
+     */
+    public function scopeRelatedTo(Builder $builder, Model $model)
+    {
+        $builder->whereHas('relations', function ($query) use ($model) {
+            $query->where('relation_type', get_class($model))->where('relation_id', $model->id);
+        });
+    }
+
+    /**
+     * Scopes the query to include Analytics records
+     * that have meta data with the given key/value.
+     *
+     * @param Builder $builder
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
+    public function scopeWithMetaValue(Builder $builder, string $key, $value)
+    {
+        $builder->whereHas('meta', function ($query) use ($key, $value) {
+            $query->where('key', $key)->where('value', $value);
+        });
+    }
+
+    /**
+     * Scopes the query to include Analytics records
+     * that have meta records with the given key.
+     *
+     * @param Builder $builder
+     * @param string $key
+     * @return void
+     */
+    public function scopeHasMeta(Builder $builder, string $key)
+    {
+        $builder->whereHas('meta', function ($query) use ($key) {
+            $query->where('key', $key);
+        });
     }
 
     public function relations()
