@@ -45,4 +45,22 @@ class AnalyticsTest extends TestCase
             'query_params' => json_encode(['foo' => 'bar', 'test' => 'true'])
         ]);
     }
+
+    /** @test */
+    public function it_tracks_a_request_with_a_json_response()
+    {
+        // When
+        $this->get('/api/analytics');
+
+        // Then
+        $this->assertDatabaseHas(ServerAnalytics::getAnalyticsDataTable(), [
+            'id'           => 1,
+            'path'         => '/api/analytics',
+            'method'       => 'GET',
+            'status_code'  => '200',
+            'user_agent'   => 'Symfony',
+            'ip_address'   => '127.0.0.1',
+            'query_params' => json_encode([])
+        ]);
+    }
 }

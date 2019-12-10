@@ -4,8 +4,8 @@ namespace OhSeeSoftware\LaravelServerAnalytics;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
+use Symfony\Component\HttpFoundation\Response;
 
 class LaravelServerAnalytics
 {

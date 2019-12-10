@@ -20,7 +20,7 @@ class TestCase extends TestbenchTestCase
 
     protected function getPackageProviders($app)
     {
-        return [\OhSeeSoftware\LaravelServerAnalytics\LaravelServerAnalyticsServiceProvider::class];
+        return [\OhSeeSoftware\LaravelServerAnalytics\Tests\TestServiceProvider::class];
     }
 
     /**

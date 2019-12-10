@@ -1,5 +1,3 @@
 <?php
 
-Route::get('/analytics', function () {
-    return 'Test';
-});
+// No routes defined yet
