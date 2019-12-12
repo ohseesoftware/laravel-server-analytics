@@ -166,6 +166,11 @@ class LaravelServerAnalytics
         $this->requestDetails->setRequest($request);
         $this->requestDetails->setResponse($response);
 
+        $duration = 0;
+        if ($request->analyticsRequestStartTime) {
+            $duration = round(microtime(true) * 1000) - $request->analyticsRequestStartTime;
+        }
+
         $analytics = Analytics::create([
             'method'       => $this->requestDetails->getMethod(),
             'path'         => $this->requestDetails->getPath(),
@@ -174,7 +179,7 @@ class LaravelServerAnalytics
             'ip_address'   => $this->requestDetails->getIpAddress(),
             'referrer'     => $this->requestDetails->getReferrer(),
             'query_params' => $this->requestDetails->getQueryParams(),
-            'duration_ms'  => round(microtime(true) * 1000) - $request->analyticsRequestStartTime,
+            'duration_ms'  => $duration
         ]);
 
         foreach ($this->postHooks as $hook) {

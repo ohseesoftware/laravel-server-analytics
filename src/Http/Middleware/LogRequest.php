@@ -18,7 +18,6 @@ class LogRequest
     public function handle($request, Closure $next, $guard = null)
     {
         $request->analyticsRequestStartTime = round(microtime(true) * 1000);
-        $request->analyticsUser = $request->user();
 
         return $next($request);
     }
