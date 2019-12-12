@@ -8,10 +8,10 @@ use Symfony\Component\HttpFoundation\Response;
 class RequestDetails
 {
     /** @var Request */
-    private $request;
+    protected $request;
 
     /** @var Response */
-    private $response;
+    protected $response;
 
     public function setRequest(Request $request)
     {
