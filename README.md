@@ -91,6 +91,8 @@ If you'd like to exclude specific routes (or wildcards) from being tracked, you 
 ```php
 // AppServiceProvider
 
+use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
+
 public function boot()
 {
     // Do not track `/home` or `/admin/*` routes
@@ -108,6 +110,8 @@ If you'd like to exclude specific request methods from being tracked, you can do
 ```php
 // AppServiceProvider
 
+use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
+
 public function boot()
 {
     // Do not track `POST` or `PUT` requests
@@ -119,13 +123,19 @@ public function boot()
 
 We provide an optional hook you can use to run custom logic after an analytics record has been created. You can provide as many hooks as you want, calling `addPostHook` will add a new hook rather than replace existing hooks.
 
+The hook closure is based an instance of `RequestDetails` and the `Analytics` record that was created for the request. You can access both the request and response inside the `RequestDetails` class. If you're using a custom `RequestDetails` class, you'll be given an instance of your custom class.
+
 ```php
 // AppServiceProvider
+
+use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
+use OhSeeSoftware\LaravelServerAnalytics\RequestDetails;
+use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
 
 public function boot()
 {
     ServerAnalytics::addPostHook(
-        function (Request $request, Response $response, Analytics $analytics) {
+        function (RequestDetails $requestDetails, Analytics $analytics) {
             // Do whatever you want with the request, response, and created analytics record
         }
     );
@@ -139,12 +149,16 @@ If you want to attach your application's entities to an analytics record, you ca
 ```php
 // AppServiceProvider
 
+use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
+use OhSeeSoftware\LaravelServerAnalytics\RequestDetails;
+use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
+
 public function boot()
 {
     ServerAnalytics::addPostHook(
-        function (Request $request, Response $response, Analytics $analytics) {
+        function (RequestDetails $requestDetails, Analytics $analytics) {
             // Attach the logged-in user to the analytics request record
-            if ($user = $request->user()) {
+            if ($user = $requestDetails->request->user()) {
               $analytics->addRelation($user);
             }
         }
@@ -156,6 +170,8 @@ There's also a helper method available if you want to attach a relation without 
 
 ```php
 // Controller
+
+use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
 
 public function __invoke(Post $post)
 {
@@ -172,10 +188,14 @@ In addition to attaching entities to your analytics records, you can attach cust
 ```php
 // AppServiceProvider
 
+use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
+use OhSeeSoftware\LaravelServerAnalytics\RequestDetails;
+use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
+
 public function boot()
 {
     ServerAnalytics::addPostHook(
-        function (Request $request, Response $response, Analytics $analytics) {
+        function (RequestDetails $requestDetails, Analytics $analytics) {
             $analytics->addMeta('foo', 'bar');
         }
     );
@@ -186,6 +206,8 @@ There's also a helper method available if you want to attach metadata without ch
 
 ```php
 // Controller
+
+use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
 
 public function __invoke(Post $post)
 {
@@ -215,6 +237,8 @@ class CustomRequestDetails extends RequestDetails
 
 // AppServiceProvider
 
+use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
+
 public function boot()
 {
     ServerAnalytics::setRequestDetails(new CustomRequestDetails);
@@ -228,6 +252,9 @@ With the above example, the `method` variable for every request will be set to "
 You can use the `AnalyticsRepository` to query data out of the analytics tables. If you need to build a custom query, you can use the `query()` method on the repository instance.
 
 ```php
+
+use OhSeeSoftware\LaravelServerAnalytics\Repositories\AnalyticsRepository;
+
 public function loadAnalytics(AnalyticsRepository $analytics)
 {
     $records = $analytics->query()->where('method', 'GET')->get();
@@ -239,18 +266,24 @@ There's also a couple query scopes setup on the `Analytics` model.
 Filter Analytics records that are related to the a given model:
 
 ```php
+use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
+
 $analytics = Analytics::relatedTo($user);
 ```
 
 Filter Analytics records that have metadata with a given key:
 
 ```php
+use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
+
 $analytics = Analytics::hasMeta('foo');
 ```
 
 Filter Analytics records that have a given metadata key/value pair:
 
 ```php
+use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
+
 $analytics = Analytics::withMetaValue('foo', 'bar');
 ```
 

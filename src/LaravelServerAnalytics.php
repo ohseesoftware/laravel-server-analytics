@@ -140,7 +140,7 @@ class LaravelServerAnalytics
      */
     public function addRelation(Model $model): void
     {
-        $this->addPostHook(function ($request, $response, Analytics $analytics) use ($model) {
+        $this->addPostHook(function (RequestDetails $requestDetails, Analytics $analytics) use ($model) {
             $analytics->addRelation($model);
         });
     }
@@ -154,7 +154,7 @@ class LaravelServerAnalytics
      */
     public function addMeta(string $key, $value): void
     {
-        $this->addPostHook(function ($request, $response, Analytics $analytics) use ($key, $value) {
+        $this->addPostHook(function (RequestDetails $requestDetails, Analytics $analytics) use ($key, $value) {
             $analytics->addMeta($key, $value);
         });
     }
@@ -227,7 +227,7 @@ class LaravelServerAnalytics
         ]);
 
         foreach ($this->postHooks as $hook) {
-            call_user_func($hook, $request, $response, $analytics);
+            call_user_func($hook, $this->requestDetails, $analytics);
         }
 
         return $analytics;
