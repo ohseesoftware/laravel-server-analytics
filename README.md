@@ -19,11 +19,11 @@ You've come to the right place.
 
 ### Goals
 
-* [x] Handled entirely by the backend: this means no client-side JS to add to your site, which means no impact on performance for your users
-* [x] Write operations should not impact request performance
-* [x] Customizable: we'll track the main aspects of a request (path, status, params, duration, user, etc), but also allow you to attach extra data to a request (such as which entity in your database was accessed or metadata)
-* [ ] Ships with a default dashboard to view your data: we'll give you a default dashboard (and seperate route) to view your data
-* [ ] Accessible API: in addition to a default dashboard, we'll expose an API you can use to pull custom metrics out of your data
+-   [x] Handled entirely by the backend: this means no client-side JS to add to your site, which means no impact on performance for your users
+-   [x] Write operations should not impact request performance
+-   [x] Customizable: we'll track the main aspects of a request (path, status, params, duration, user, etc), but also allow you to attach extra data to a request (such as which entity in your database was accessed or metadata)
+-   [ ] Ships with a default dashboard to view your data: we'll give you a default dashboard (and seperate route) to view your data
+-   [ ] Accessible API: in addition to a default dashboard, we'll expose an API you can use to pull custom metrics out of your data
 
 ## Installation
 
@@ -57,7 +57,7 @@ php artisan migrate
 
 For basic request tracking, there's no custom code you need to add to your application other than including the middleware:
 
-``` php
+```php
 // Kernel.php
 
 protected $middleware = [
@@ -67,6 +67,22 @@ protected $middleware = [
 ```
 
 If you want to only track a specific middleware group, add it to that group instead of the global `$middleware` variable.
+
+### Tracking authenticated user
+
+**v3.0.0+**
+
+By default, the package will automatically track the authenticated user who made the request. This is stored directly in the `analytics` table in the `user_id` column.
+
+The default migration assumes you users are stored in a `users` table with a `biginteger` field type for the primary key. If your users are not stored like that, you should write your own migration.
+
+When logging a request, the package will use this code to insert the `user_id` into the `analytics` table:
+
+```php
+if ($user = $request->user()) {
+    $userId = $user->id;
+}
+```
 
 ### Excluding Routes
 
@@ -214,7 +230,7 @@ $analytics = Analytics::withMetaValue('foo', 'bar');
 
 ## Testing
 
-``` bash
+```bash
 ./vendor/bin/phpunit
 ```
 
@@ -232,8 +248,8 @@ If you discover any security related issues, please email security@ohseesoftware
 
 ## Credits
 
-- [Owen Conti](https://github.com/ohseesoftware)
-- [All Contributors](../../contributors)
+-   [Owen Conti](https://github.com/ohseesoftware)
+-   [All Contributors](../../contributors)
 
 ## License
 

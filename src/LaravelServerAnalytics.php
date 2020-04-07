@@ -27,6 +27,16 @@ class LaravelServerAnalytics
     }
 
     /**
+     * Returns the class which represents users.
+     *
+     * @return string
+     */
+    public static function getUserModel(): string
+    {
+        return config('laravel-server-analytics.user_model');
+    }
+
+    /**
      * Returns the name of the analytics data table.
      *
      * @return string
@@ -171,7 +181,13 @@ class LaravelServerAnalytics
             $duration = round(microtime(true) * 1000) - $request->analyticsRequestStartTime;
         }
 
+        $userId = null;
+        if ($user = $request->user()) {
+            $userId = $user->id;
+        }
+
         $analytics = Analytics::create([
+            'user_id'      => $userId,
             'method'       => $this->requestDetails->getMethod(),
             'path'         => $this->requestDetails->getPath(),
             'status_code'  => $this->requestDetails->getStatusCode(),
