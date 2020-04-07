@@ -9,6 +9,8 @@ class AnalyticsRelation extends Model
 {
     public $timestamps = false;
 
+    protected $fillable = ['reason'];
+
     public function getTable()
     {
         return ServerAnalytics::getAnalyticsRelationTable();

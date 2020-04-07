@@ -136,12 +136,13 @@ class LaravelServerAnalytics
      * Relates the given Model to the current analytics record.
      *
      * @param Model $model
+     * @param string|null $reason
      * @return void
      */
-    public function addRelation(Model $model): void
+    public function addRelation(Model $model, ?string $reason = null): void
     {
-        $this->addPostHook(function (RequestDetails $requestDetails, Analytics $analytics) use ($model) {
-            $analytics->addRelation($model);
+        $this->addPostHook(function (RequestDetails $requestDetails, Analytics $analytics) use ($model, $reason) {
+            $analytics->addRelation($model, $reason);
         });
     }
 
