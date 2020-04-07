@@ -13,7 +13,9 @@ class Analytics extends Model
         return ServerAnalytics::getAnalyticsDataTable();
     }
 
-    protected $fillable = ['user_id', 'path', 'method', 'status_code', 'duration_ms', 'user_agent', 'query_params', 'ip_address'];
+    protected $fillable = [
+        'user_id', 'path', 'method', 'status_code', 'duration_ms', 'user_agent', 'query_params', 'ip_address'
+    ];
 
     protected $casts = [
         'query_params' => 'array'
