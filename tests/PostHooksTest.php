@@ -42,4 +42,22 @@ class PostHooksTest extends TestCase
             'relation_type' => Analytics::class
         ]);
     }
+
+    /** @test */
+    public function it_clears_post_hooks()
+    {
+        // Given
+        $spy = Mockery::spy(function () {
+            // no op
+        });
+        ServerAnalytics::addPostHook($spy);
+
+        ServerAnalytics::clearPostHooks();
+
+        // When
+        $this->get('/analytics');
+
+        // Then
+        $spy->shouldNotHaveBeenCalled();
+    }
 }
