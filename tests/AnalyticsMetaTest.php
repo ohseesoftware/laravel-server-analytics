@@ -33,4 +33,21 @@ class AnalyticsMetaTest extends TestCase
             'value'        => '1234'
         ]);
     }
+
+    /** @test */
+    public function it_adds_meta_via_helper_method()
+    {
+        // Given
+        ServerAnalytics::addMeta('test', '1234');
+
+        // When
+        $this->get('/analytics');
+
+        // Then
+        $this->assertDatabaseHas(ServerAnalytics::getAnalyticsMetaTable(), [
+            'analytics_id' => 1,
+            'key'          => 'test',
+            'value'        => '1234'
+        ]);
+    }
 }

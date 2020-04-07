@@ -152,7 +152,20 @@ public function boot()
 }
 ```
 
-### Attach Meta to Analytics Records
+There's also a helper method available if you want to attach a relation without checking the request, response, or analytics record:
+
+```php
+// Controller
+
+public function __invoke(Post $post)
+{
+    ServerAnalytics::addRelation($post);
+
+    // ...finish controller logic
+}
+```
+
+### Attach Metadata to Analytics Records
 
 In addition to attaching entities to your analytics records, you can attach custom metadata (key/value).
 
@@ -166,6 +179,19 @@ public function boot()
             $analytics->addMeta('foo', 'bar');
         }
     );
+}
+```
+
+There's also a helper method available if you want to attach metadata without checking the request, response, or analytics record:
+
+```php
+// Controller
+
+public function __invoke(Post $post)
+{
+    ServerAnalytics::addMeta('some-key', 'some-value');
+
+    // ...finish controller logic
 }
 ```
 
