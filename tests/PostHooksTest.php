@@ -3,11 +3,10 @@
 namespace OhSeeSoftware\LaravelServerAnalytics\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Mockery;
 use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
 use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
+use OhSeeSoftware\LaravelServerAnalytics\RequestDetails;
 
 class PostHooksTest extends TestCase
 {
@@ -19,7 +18,7 @@ class PostHooksTest extends TestCase
         // Given
         $relatedAnalytics = factory(Analytics::class)->create();
         ServerAnalytics::addPostHook(
-            function (Request $request, Response $response, Analytics $analytics) use ($relatedAnalytics) {
+            function (RequestDetails $requestDetails, Analytics $analytics) use ($relatedAnalytics) {
                 $analytics->addRelation($relatedAnalytics);
             }
         );
