@@ -3,6 +3,7 @@
 namespace OhSeeSoftware\LaravelServerAnalytics;
 
 use Closure;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,6 +25,16 @@ class LaravelServerAnalytics
     public function __construct()
     {
         $this->setRequestDetails(resolve(RequestDetails::class));
+    }
+
+    /**
+     * Returns the class which represents users.
+     *
+     * @return string
+     */
+    public static function getUserModel(): string
+    {
+        return config('laravel-server-analytics.user_model');
     }
 
     /**
@@ -62,7 +73,7 @@ class LaravelServerAnalytics
      * @param RequestDetails
      * @return void
      */
-    public function setRequestDetails(RequestDetails $requestDetails)
+    public function setRequestDetails(RequestDetails $requestDetails): void
     {
         $this->requestDetails = $requestDetails;
     }
@@ -75,7 +86,7 @@ class LaravelServerAnalytics
      * @param array $routes
      * @return void
      */
-    public function addRouteExclusions(array $routes)
+    public function addRouteExclusions(array $routes): void
     {
         $this->excludeRoutes = array_merge($this->excludeRoutes, $routes);
     }
@@ -86,7 +97,7 @@ class LaravelServerAnalytics
      * @param array $methods
      * @return void
      */
-    public function addMethodExclusions(array $methods)
+    public function addMethodExclusions(array $methods): void
     {
         $methods = array_map(function ($method) {
             return strtoupper($method);
@@ -101,7 +112,7 @@ class LaravelServerAnalytics
      * @param Request $request
      * @return boolean
      */
-    public function shouldTrackRequest(Request $request)
+    public function shouldTrackRequest(Request $request): bool
     {
         if ($this->inExcludeRoutesArray($request) || $this->inExcludeMethodsArray($request)) {
             return false;
@@ -116,9 +127,37 @@ class LaravelServerAnalytics
      * @param Closure
      * @return void
      */
-    public function addPostHook($callback)
+    public function addPostHook($callback): void
     {
         $this->postHooks[] = $callback;
+    }
+
+    /**
+     * Relates the given Model to the current analytics record.
+     *
+     * @param Model $model
+     * @param string|null $reason
+     * @return void
+     */
+    public function addRelation(Model $model, ?string $reason = null): void
+    {
+        $this->addPostHook(function (RequestDetails $requestDetails, Analytics $analytics) use ($model, $reason) {
+            $analytics->addRelation($model, $reason);
+        });
+    }
+
+    /**
+     * Attaches the given meta to the current analytics record.
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
+    public function addMeta(string $key, $value): void
+    {
+        $this->addPostHook(function (RequestDetails $requestDetails, Analytics $analytics) use ($key, $value) {
+            $analytics->addMeta($key, $value);
+        });
     }
 
     /**
@@ -127,7 +166,7 @@ class LaravelServerAnalytics
      * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
-    public function inExcludeRoutesArray(Request $request)
+    public function inExcludeRoutesArray(Request $request): bool
     {
         foreach ($this->excludeRoutes as $route) {
             if ($route !== '/') {
@@ -148,7 +187,7 @@ class LaravelServerAnalytics
      * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
-    public function inExcludeMethodsArray(Request $request)
+    public function inExcludeMethodsArray(Request $request): bool
     {
         $method = strtoupper($request->method());
         return in_array($method, $this->excludeMethods);
@@ -171,7 +210,13 @@ class LaravelServerAnalytics
             $duration = round(microtime(true) * 1000) - $request->analyticsRequestStartTime;
         }
 
+        $userId = null;
+        if ($user = $request->user()) {
+            $userId = $user->id;
+        }
+
         $analytics = Analytics::create([
+            'user_id'      => $userId,
             'method'       => $this->requestDetails->getMethod(),
             'path'         => $this->requestDetails->getPath(),
             'status_code'  => $this->requestDetails->getStatusCode(),
@@ -183,7 +228,7 @@ class LaravelServerAnalytics
         ]);
 
         foreach ($this->postHooks as $hook) {
-            call_user_func($hook, $request, $response, $analytics);
+            call_user_func($hook, $this->requestDetails, $analytics);
         }
 
         return $analytics;

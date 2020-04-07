@@ -3,11 +3,9 @@
 namespace OhSeeSoftware\LaravelServerAnalytics\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Mockery;
-use OhSeeSoftware\LaravelServerAnalytics\ServerAnalytics;
+use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
 use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
+use OhSeeSoftware\LaravelServerAnalytics\RequestDetails;
 
 class AnalyticsMetaTest extends TestCase
 {
@@ -18,10 +16,27 @@ class AnalyticsMetaTest extends TestCase
     {
         // Given
         ServerAnalytics::addPostHook(
-            function (Request $request, Response $response, Analytics $analytics) {
+            function (RequestDetails $requestDetails, Analytics $analytics) {
                 $analytics->addMeta('test', '1234');
             }
         );
+
+        // When
+        $this->get('/analytics');
+
+        // Then
+        $this->assertDatabaseHas(ServerAnalytics::getAnalyticsMetaTable(), [
+            'analytics_id' => 1,
+            'key'          => 'test',
+            'value'        => '1234'
+        ]);
+    }
+
+    /** @test */
+    public function it_adds_meta_via_helper_method()
+    {
+        // Given
+        ServerAnalytics::addMeta('test', '1234');
 
         // When
         $this->get('/analytics');

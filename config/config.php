@@ -3,6 +3,11 @@
 return [
 
     /**
+     * The model class used to represent users.
+     */
+    'user_model' => 'App\User',
+
+    /**
      * The name of the table where the analytics data will be stored.
      */
     'analytics_data_table' => 'analytics',

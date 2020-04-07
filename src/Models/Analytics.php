@@ -4,7 +4,7 @@ namespace OhSeeSoftware\LaravelServerAnalytics\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use OhSeeSoftware\LaravelServerAnalytics\ServerAnalytics;
+use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
 
 class Analytics extends Model
 {
@@ -13,7 +13,9 @@ class Analytics extends Model
         return ServerAnalytics::getAnalyticsDataTable();
     }
 
-    protected $fillable = ['path', 'method', 'status_code', 'duration_ms', 'user_agent', 'query_params', 'ip_address'];
+    protected $fillable = [
+        'user_id', 'path', 'method', 'status_code', 'duration_ms', 'user_agent', 'query_params', 'ip_address'
+    ];
 
     protected $casts = [
         'query_params' => 'array'
@@ -23,13 +25,17 @@ class Analytics extends Model
      * Adds a new relation to the analytics record.
      *
      * @param Model $entity
+     * @param string|null $reason
      * @return AnalyticsRelation
      */
-    public function addRelation(Model $entity): AnalyticsRelation
+    public function addRelation(Model $entity, ?string $reason = null): AnalyticsRelation
     {
-        $relation = new AnalyticsRelation;
+        $relation = new AnalyticsRelation([
+            'reason' => $reason
+        ]);
         $relation->relation()->associate($entity);
         $this->relations()->save($relation);
+    
         return $relation;
     }
 
@@ -94,6 +100,11 @@ class Analytics extends Model
         $builder->whereHas('meta', function ($query) use ($key) {
             $query->where('key', $key);
         });
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(ServerAnalytics::getUserModel());
     }
 
     public function relations()

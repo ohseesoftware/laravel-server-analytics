@@ -3,11 +3,13 @@
 namespace OhSeeSoftware\LaravelServerAnalytics\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use OhSeeSoftware\LaravelServerAnalytics\ServerAnalytics;
+use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
 
 class AnalyticsRelation extends Model
 {
     public $timestamps = false;
+
+    protected $fillable = ['reason'];
 
     public function getTable()
     {

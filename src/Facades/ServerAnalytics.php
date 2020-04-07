@@ -1,6 +1,6 @@
 <?php
 
-namespace OhSeeSoftware\LaravelServerAnalytics;
+namespace OhSeeSoftware\LaravelServerAnalytics\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
