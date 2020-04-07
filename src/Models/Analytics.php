@@ -25,13 +25,17 @@ class Analytics extends Model
      * Adds a new relation to the analytics record.
      *
      * @param Model $entity
+     * @param string|null $reason
      * @return AnalyticsRelation
      */
-    public function addRelation(Model $entity): AnalyticsRelation
+    public function addRelation(Model $entity, ?string $reason = null): AnalyticsRelation
     {
-        $relation = new AnalyticsRelation;
+        $relation = new AnalyticsRelation([
+            'reason' => $reason
+        ]);
         $relation->relation()->associate($entity);
         $this->relations()->save($relation);
+    
         return $relation;
     }
 

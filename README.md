@@ -144,7 +144,7 @@ public function boot()
 
 ### Attach Entities to Analytics Records
 
-If you want to attach your application's entities to an analytics record, you can use the `addRelation(Model $model)` on the Analytics model in combination with a hook:
+If you want to attach your application's entities to an analytics record, you can use the `addRelation(Model $model, ?string $reason = null)` on the Analytics model in combination with a hook:
 
 ```php
 // AppServiceProvider
@@ -180,6 +180,8 @@ public function __invoke(Post $post)
     // ...finish controller logic
 }
 ```
+
+The method provides an optional second argument, `$reason`, which allows you to add a reason for the relation attachment. The `reason` column is a `string, VARCHAR(255)` column. If not passed, the value will be `null`.
 
 ### Attach Metadata to Analytics Records
 

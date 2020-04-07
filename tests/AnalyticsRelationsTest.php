@@ -3,7 +3,6 @@
 namespace OhSeeSoftware\LaravelServerAnalytics\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Mockery;
 use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
 use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
 use OhSeeSoftware\LaravelServerAnalytics\RequestDetails;
@@ -30,7 +29,31 @@ class AnalyticsRelationsTest extends TestCase
         $this->assertDatabaseHas(ServerAnalytics::getAnalyticsRelationTable(), [
             'analytics_id'  => 2,
             'relation_id'   => $relatedAnalytics->id,
-            'relation_type' => Analytics::class
+            'relation_type' => Analytics::class,
+            'reason'        => null
+        ]);
+    }
+
+    /** @test */
+    public function it_saves_relations_with_a_reason_for_analytics()
+    {
+        // Given
+        $relatedAnalytics = factory(Analytics::class)->create();
+        ServerAnalytics::addPostHook(
+            function (RequestDetails $requestDetails, Analytics $analytics) use ($relatedAnalytics) {
+                $analytics->addRelation($relatedAnalytics, 'some fake reason');
+            }
+        );
+
+        // When
+        $this->get('/analytics');
+
+        // Then
+        $this->assertDatabaseHas(ServerAnalytics::getAnalyticsRelationTable(), [
+            'analytics_id'  => 2,
+            'relation_id'   => $relatedAnalytics->id,
+            'relation_type' => Analytics::class,
+            'reason'        => 'some fake reason'
         ]);
     }
 
@@ -41,16 +64,10 @@ class AnalyticsRelationsTest extends TestCase
         $relatedAnalytics = factory(Analytics::class)->create();
         ServerAnalytics::addRelation($relatedAnalytics);
 
-        $spy = Mockery::spy(function () {
-            // no op
-        });
-        ServerAnalytics::addPostHook($spy);
-
         // When
         $this->get('/analytics');
 
         // Then
-        $spy->shouldHaveBeenCalled();
         $this->assertDatabaseHas(ServerAnalytics::getAnalyticsDataTable(), [
             'id' => 2
         ]);
@@ -58,6 +75,28 @@ class AnalyticsRelationsTest extends TestCase
             'analytics_id'  => 2,
             'relation_id'   => $relatedAnalytics->id,
             'relation_type' => Analytics::class
+        ]);
+    }
+
+    /** @test */
+    public function it_adds_relation_with_reason_via_helper_method()
+    {
+        // Given
+        $relatedAnalytics = factory(Analytics::class)->create();
+        ServerAnalytics::addRelation($relatedAnalytics, 'some fake reason');
+
+        // When
+        $this->get('/analytics');
+
+        // Then
+        $this->assertDatabaseHas(ServerAnalytics::getAnalyticsDataTable(), [
+            'id' => 2
+        ]);
+        $this->assertDatabaseHas(ServerAnalytics::getAnalyticsRelationTable(), [
+            'analytics_id'  => 2,
+            'relation_id'   => $relatedAnalytics->id,
+            'relation_type' => Analytics::class,
+            'reason'        => 'some fake reason'
         ]);
     }
 }
