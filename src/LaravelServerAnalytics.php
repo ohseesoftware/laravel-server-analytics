@@ -3,6 +3,7 @@
 namespace OhSeeSoftware\LaravelServerAnalytics;
 
 use Closure;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
 use Symfony\Component\HttpFoundation\Response;
@@ -72,7 +73,7 @@ class LaravelServerAnalytics
      * @param RequestDetails
      * @return void
      */
-    public function setRequestDetails(RequestDetails $requestDetails)
+    public function setRequestDetails(RequestDetails $requestDetails): void
     {
         $this->requestDetails = $requestDetails;
     }
@@ -85,7 +86,7 @@ class LaravelServerAnalytics
      * @param array $routes
      * @return void
      */
-    public function addRouteExclusions(array $routes)
+    public function addRouteExclusions(array $routes): void
     {
         $this->excludeRoutes = array_merge($this->excludeRoutes, $routes);
     }
@@ -96,7 +97,7 @@ class LaravelServerAnalytics
      * @param array $methods
      * @return void
      */
-    public function addMethodExclusions(array $methods)
+    public function addMethodExclusions(array $methods): void
     {
         $methods = array_map(function ($method) {
             return strtoupper($method);
@@ -111,7 +112,7 @@ class LaravelServerAnalytics
      * @param Request $request
      * @return boolean
      */
-    public function shouldTrackRequest(Request $request)
+    public function shouldTrackRequest(Request $request): bool
     {
         if ($this->inExcludeRoutesArray($request) || $this->inExcludeMethodsArray($request)) {
             return false;
@@ -126,9 +127,36 @@ class LaravelServerAnalytics
      * @param Closure
      * @return void
      */
-    public function addPostHook($callback)
+    public function addPostHook($callback): void
     {
         $this->postHooks[] = $callback;
+    }
+
+    /**
+     * Relates the given Model to the current analytics record.
+     *
+     * @param Model $model
+     * @return void
+     */
+    public function addRelation(Model $model): void
+    {
+        $this->addPostHook(function ($request, $response, Analytics $analytics) use ($model) {
+            $analytics->addRelation($model);
+        });
+    }
+
+    /**
+     * Attaches the given meta to the current analytics record.
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
+    public function addMeta(string $key, $value): void
+    {
+        $this->addPostHook(function ($request, $response, Analytics $analytics) use ($key, $value) {
+            $analytics->addMeta($key, $value);
+        });
     }
 
     /**
@@ -137,7 +165,7 @@ class LaravelServerAnalytics
      * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
-    public function inExcludeRoutesArray(Request $request)
+    public function inExcludeRoutesArray(Request $request): bool
     {
         foreach ($this->excludeRoutes as $route) {
             if ($route !== '/') {
@@ -158,7 +186,7 @@ class LaravelServerAnalytics
      * @param  \Illuminate\Http\Request  $request
      * @return bool
      */
-    public function inExcludeMethodsArray(Request $request)
+    public function inExcludeMethodsArray(Request $request): bool
     {
         $method = strtoupper($request->method());
         return in_array($method, $this->excludeMethods);
