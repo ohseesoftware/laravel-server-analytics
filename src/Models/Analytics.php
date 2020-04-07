@@ -13,7 +13,9 @@ class Analytics extends Model
         return ServerAnalytics::getAnalyticsDataTable();
     }
 
-    protected $fillable = ['path', 'method', 'status_code', 'duration_ms', 'user_agent', 'query_params', 'ip_address'];
+    protected $fillable = [
+        'user_id', 'path', 'method', 'status_code', 'duration_ms', 'user_agent', 'query_params', 'ip_address'
+    ];
 
     protected $casts = [
         'query_params' => 'array'
@@ -94,6 +96,11 @@ class Analytics extends Model
         $builder->whereHas('meta', function ($query) use ($key) {
             $query->where('key', $key);
         });
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(ServerAnalytics::getUserModel());
     }
 
     public function relations()
