@@ -3,7 +3,7 @@
 namespace OhSeeSoftware\LaravelServerAnalytics\Http\Middleware;
 
 use Closure;
-use OhSeeSoftware\LaravelServerAnalytics\ServerAnalytics;
+use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
 
 class LogRequest
 {

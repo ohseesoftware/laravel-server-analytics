@@ -4,7 +4,7 @@ namespace OhSeeSoftware\LaravelServerAnalytics\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
-use OhSeeSoftware\LaravelServerAnalytics\ServerAnalytics;
+use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
 
 class MethodExclusionsTest extends TestCase
 {
