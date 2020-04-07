@@ -133,6 +133,16 @@ class LaravelServerAnalytics
     }
 
     /**
+     * Clears the post hooks.
+     *
+     * @return void
+     */
+    public function clearPostHooks(): void
+    {
+        $this->postHooks = [];
+    }
+
+    /**
      * Relates the given Model to the current analytics record.
      *
      * @param Model $model
