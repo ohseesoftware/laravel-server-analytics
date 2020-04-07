@@ -74,7 +74,7 @@ If you want to only track a specific middleware group, add it to that group inst
 
 By default, the package will automatically track the authenticated user who made the request. This is stored directly in the `analytics` table in the `user_id` column.
 
-The default migration assumes you users are stored in a `users` table with a `biginteger` field type for the primary key. If your users are not stored like that, you should write your own migration.
+The default migration assumes you users are stored in a `users` table with a `BIGINT` field type for the primary key. If your users are not stored like that, you should write your own migration. The package also assumes your `User` model is located at `App\User`. If yours is located in a difference namespace, you can update the `user_model` key in the published config file.
 
 When logging a request, the package will use this code to insert the `user_id` into the `analytics` table:
 
