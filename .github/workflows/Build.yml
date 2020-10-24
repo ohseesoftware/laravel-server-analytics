@@ -19,7 +19,7 @@ jobs:
         if: github.ref == 'refs/heads/master'
         run: ./vendor/bin/php-coveralls -v --coverage_clover build/coverage.xml --json_path build/coveralls-upload.json
         env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   release:
     name: Release
     if: github.ref == 'refs/heads/master'
