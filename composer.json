@@ -24,7 +24,7 @@
     "require-dev": {
         "orchestra/testbench": "4.4.*",
         "php-coveralls/php-coveralls": "^2.2",
-        "phpunit/phpunit": "^8.4",
+        "phpunit/phpunit": "^9.5",
         "squizlabs/php_codesniffer": "*"
     },
     "autoload": {
