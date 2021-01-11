@@ -9,6 +9,10 @@ jobs:
       - name: Checkout
         if: github.ref == 'refs/heads/master'
         run: git checkout "${GITHUB_REF:11}"
+      - name: Setup PHP with PECL extension
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
       - name: Composer Install
         run: composer install
       - name: PHPCS
