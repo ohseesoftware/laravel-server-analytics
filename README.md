@@ -119,6 +119,20 @@ public function boot()
 }
 ```
 
+### Excluding Requests From Bots
+
+If you'd like to exclude requests from bots/crawlers, you can set the `ignore_bot_requests` configuration value to `true`.
+
+We use the [Crawl Detect](https://github.com/JayBizzle/Crawler-Detect) package to detect bots/crawlers.
+
+```php
+// config/laravel-server-analytics.php
+
+return [
+    'ignore_bot_requests' => true
+];
+```
+
 ### Post Request Hooks
 
 We provide an optional hook you can use to run custom logic after an analytics record has been created. You can provide as many hooks as you want, calling `addPostHook` will add a new hook rather than replace existing hooks.

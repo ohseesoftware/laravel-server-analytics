@@ -4,7 +4,6 @@ namespace OhSeeSoftware\LaravelServerAnalytics\Tests\Models;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
-use OhSeeSoftware\LaravelServerAnalytics\Repositories\AnalyticsRepository;
 use OhSeeSoftware\LaravelServerAnalytics\Tests\TestCase;
 
 class AnalyticsModelTest extends TestCase

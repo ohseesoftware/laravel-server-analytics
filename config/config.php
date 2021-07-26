@@ -22,5 +22,11 @@ return [
      * The name of the meta table used to attach
      * metadata to analytics request records.
      */
-    'analytics_meta_table' => 'analytics_meta'
+    'analytics_meta_table' => 'analytics_meta',
+
+    /**
+     * Controls whether or not the page views
+     * from bots will be recorded.
+     */
+    'ignore_bot_requests' => true
 ];

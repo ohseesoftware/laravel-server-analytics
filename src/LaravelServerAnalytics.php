@@ -5,6 +5,7 @@ namespace OhSeeSoftware\LaravelServerAnalytics;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Jaybizzle\CrawlerDetect\CrawlerDetect;
 use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -36,6 +37,17 @@ class LaravelServerAnalytics
     {
         return config('laravel-server-analytics.user_model');
     }
+
+    /**
+     * Indicates if we should ignore requests from bots.
+     *
+     * @return bool
+     */
+    public static function shouldIgnoreBotRequests(): bool
+    {
+        return config('laravel-server-analytics.ignore_bot_requests');
+    }
+
 
     /**
      * Returns the name of the analytics data table.
@@ -115,6 +127,10 @@ class LaravelServerAnalytics
     public function shouldTrackRequest(Request $request): bool
     {
         if ($this->inExcludeRoutesArray($request) || $this->inExcludeMethodsArray($request)) {
+            return false;
+        }
+
+        if (static::shouldIgnoreBotRequests() && (new CrawlerDetect())->isCrawler($request->userAgent())) {
             return false;
         }
 

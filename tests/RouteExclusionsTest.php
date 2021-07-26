@@ -3,6 +3,7 @@
 namespace OhSeeSoftware\LaravelServerAnalytics\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Config;
 use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
 
 class RouteExclusionsTest extends TestCase
@@ -47,6 +48,23 @@ class RouteExclusionsTest extends TestCase
 
         // When
         $this->get('/test/1234');
+
+        // Then
+        $this->assertDatabaseMissing(ServerAnalytics::getAnalyticsDataTable(), [
+            'id' => 1
+        ]);
+    }
+
+    /** @test */
+    public function it_excludes_requests_from_bots_when_configuration_is_set()
+    {
+        // Given
+        Config::set('ignore_bot_requests', true);
+
+        // When
+        $this->get('/test/1234', [
+            'User-Agent' => '80legs'
+        ]);
 
         // Then
         $this->assertDatabaseMissing(ServerAnalytics::getAnalyticsDataTable(), [
