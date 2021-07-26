@@ -18,7 +18,6 @@ class LaravelServerAnalyticsServiceProvider extends ServiceProvider
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'laravel-server-analytics');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-server-analytics');
         $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
-        $this->loadRoutesFrom(__DIR__ . '/Http/routes.php');
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
