@@ -14,12 +14,14 @@ class AddUserIdToAnalyticsTable extends Migration
         Schema::table(ServerAnalytics::getAnalyticsDataTable(), function (Blueprint $table) {
             $table->unsignedBigInteger('user_id')->nullable()->after('id');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->index('user_id');
         });
     }
 
     public function down()
     {
         Schema::table(ServerAnalytics::getAnalyticsDataTable(), function (Blueprint $table) {
+            $table->dropIndex('user_id');
             $table->dropForeign(['user_id']);
             $table->dropColumn('user_id');
         });
