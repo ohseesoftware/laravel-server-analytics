@@ -6,16 +6,16 @@ use Illuminate\Support\Facades\Facade;
 use OhSeeSoftware\LaravelServerAnalytics\RequestDetails;
 
 /**
- * @method void setRequestDetails(RequestDetails $requestDetails)
- * @method void addRouteExclusions(array $routes)
- * @method void addMethodExclusions(array $methods)
- * @method bool shouldTrackRequest(Request $request)
- * @method void addPostHook($callback)
- * @method void clearPostHooks()
- * @method void addRelation(Model $model, ?string $reason = null)
- * @method void addMeta(string $key, $value)
- * @method bool inExcludeRoutesArray(Request $request)
- * @method bool inExcludeMethodsArray(Request $request)
+ * @method static void setRequestDetails(RequestDetails $requestDetails)
+ * @method static void addRouteExclusions(array $routes)
+ * @method static void addMethodExclusions(array $methods)
+ * @method static bool shouldTrackRequest(Request $request)
+ * @method static void addPostHook($callback)
+ * @method static void clearPostHooks()
+ * @method static void addRelation(Model $model, ?string $reason = null)
+ * @method static void addMeta(string $key, $value)
+ * @method static bool inExcludeRoutesArray(Request $request)
+ * @method static bool inExcludeMethodsArray(Request $request)
  */
 class ServerAnalytics extends Facade
 {
