@@ -25,6 +25,7 @@ class CreateAnalyticsTable extends Migration
         });
 
         Schema::create(ServerAnalytics::getAnalyticsRelationTable(), function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->unsignedBigInteger('analytics_id');
             $table->foreign('analytics_id')
                 ->references('id')
@@ -33,6 +34,7 @@ class CreateAnalyticsTable extends Migration
         });
 
         Schema::create(ServerAnalytics::getAnalyticsMetaTable(), function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->unsignedBigInteger('analytics_id');
             $table->foreign('analytics_id')
                 ->references('id')
