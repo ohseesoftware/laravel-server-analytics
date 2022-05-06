@@ -60,7 +60,7 @@ class RequestDetails
      */
     public function getUserAgent(): string
     {
-        return $this->request->header('User-Agent');
+        return $this->request->header('User-Agent', 'unknown');
     }
 
     /**
