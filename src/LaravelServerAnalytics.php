@@ -244,6 +244,7 @@ class LaravelServerAnalytics
         $analytics = Analytics::create([
             'user_id'      => $userId,
             'method'       => $this->requestDetails->getMethod(),
+            'host'         => $this->requestDetails->getHost(),
             'path'         => $this->requestDetails->getPath(),
             'status_code'  => $this->requestDetails->getStatusCode(),
             'user_agent'   => $this->requestDetails->getUserAgent(),

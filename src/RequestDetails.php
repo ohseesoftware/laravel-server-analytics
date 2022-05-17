@@ -34,6 +34,16 @@ class RequestDetails
     }
 
     /**
+     * Returns the host of the request.
+     *
+     * @return string
+     */
+    public function getHost(): string
+    {
+        return $this->request->getHost();
+    }
+
+    /**
      * Returns the path of the request.
      *
      * @return string

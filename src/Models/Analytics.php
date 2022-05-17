@@ -14,7 +14,7 @@ class Analytics extends Model
     }
 
     protected $fillable = [
-        'user_id', 'path', 'method', 'status_code', 'duration_ms', 'user_agent', 'query_params', 'ip_address'
+        'user_id', 'path', 'method', 'status_code', 'duration_ms', 'user_agent', 'query_params', 'ip_address', 'host'
     ];
 
     protected $casts = [
