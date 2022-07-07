@@ -14,7 +14,7 @@ class Analytics extends Model
     }
 
     protected $fillable = [
-        'user_id', 'path', 'method', 'status_code', 'duration_ms', 'user_agent', 'query_params', 'ip_address', 'host'
+        'user_id', 'path', 'method', 'status_code', 'duration_ms', 'user_agent', 'query_params', 'ip_address', 'referrer', 'host'
     ];
 
     protected $casts = [
@@ -35,7 +35,7 @@ class Analytics extends Model
         ]);
         $relation->relation()->associate($entity);
         $this->relations()->save($relation);
-    
+
         return $relation;
     }
 

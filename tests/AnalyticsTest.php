@@ -14,7 +14,7 @@ class AnalyticsTest extends TestCase
     public function it_tracks_a_request()
     {
         // When
-        $this->get('/analytics');
+        $this->withHeader('referer', 'https://google.com')->get('/analytics');
 
         // Then
         $this->assertDatabaseHas(ServerAnalytics::getAnalyticsDataTable(), [
@@ -24,6 +24,7 @@ class AnalyticsTest extends TestCase
             'status_code'  => '200',
             'user_agent'   => 'Symfony',
             'ip_address'   => '127.0.0.1',
+            'referrer'     => 'https://google.com',
             'query_params' => json_encode([])
         ]);
     }
@@ -69,7 +70,7 @@ class AnalyticsTest extends TestCase
     {
         // Given
         $user = factory(User::class)->create();
-    
+
         // When
         $this->be($user)->get('/api/analytics');
 
