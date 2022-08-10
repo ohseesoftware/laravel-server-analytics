@@ -16,9 +16,9 @@ class AnalyticsRelationsTest extends TestCase
     {
         // Given
         $relatedAnalytics = factory(Analytics::class)->create();
-        ServerAnalytics::addPostHook(
-            function (RequestDetails $requestDetails, Analytics $analytics) use ($relatedAnalytics) {
-                $analytics->addRelation($relatedAnalytics);
+        ServerAnalytics::addRelationHook(
+            function (RequestDetails $requestDetails) use ($relatedAnalytics) {
+                return ['model' => $relatedAnalytics];
             }
         );
 
@@ -39,9 +39,9 @@ class AnalyticsRelationsTest extends TestCase
     {
         // Given
         $relatedAnalytics = factory(Analytics::class)->create();
-        ServerAnalytics::addPostHook(
-            function (RequestDetails $requestDetails, Analytics $analytics) use ($relatedAnalytics) {
-                $analytics->addRelation($relatedAnalytics, 'some fake reason');
+        ServerAnalytics::addRelationHook(
+            function (RequestDetails $requestDetails) use ($relatedAnalytics) {
+                return ['model' => $relatedAnalytics, 'reason' => 'some fake reason'];
             }
         );
 

@@ -3,8 +3,10 @@
 namespace OhSeeSoftware\LaravelServerAnalytics\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use OhSeeSoftware\LaravelServerAnalytics\RequestDetails;
+use Illuminate\Support\Facades\Config;
 use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
+use OhSeeSoftware\LaravelServerAnalytics\RequestDetails;
+use OhSeeSoftware\LaravelServerAnalytics\Tests\Fixtures\RequestDetailsOverride;
 
 class RequestDetailsTest extends TestCase
 {
@@ -13,15 +15,8 @@ class RequestDetailsTest extends TestCase
     /** @test */
     public function it_allows_overriding_request_details_class()
     {
-        $override = new class extends RequestDetails {
-            public function getMethod(): string
-            {
-                return 'Test';
-            }
-        };
-
         // Given
-        ServerAnalytics::setRequestDetails($override);
+        Config::set('laravel-server-analytics.request_details_class', RequestDetailsOverride::class);
 
         // When
         $this->get('/analytics');

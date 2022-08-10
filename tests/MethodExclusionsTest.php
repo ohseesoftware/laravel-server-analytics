@@ -14,9 +14,9 @@ class MethodExclusionsTest extends TestCase
     public function it_tracks_method_if_not_in_excludes_array()
     {
         $spy = Mockery::spy(function () {
-            // no op
+            return ['key' => 'test'];
         });
-        ServerAnalytics::addPostHook($spy);
+        ServerAnalytics::addMetaHook($spy);
 
         // Given
         ServerAnalytics::addMethodExclusions(['POST']);

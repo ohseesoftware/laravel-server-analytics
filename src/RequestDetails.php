@@ -13,14 +13,18 @@ class RequestDetails
     /** @var Response */
     public $response;
 
-    public function setRequest(Request $request)
+    public function setRequest(Request $request): self
     {
         $this->request = $request;
+
+        return $this;
     }
 
-    public function setResponse(Response $response)
+    public function setResponse(Response $response): self
     {
         $this->response = $response;
+
+        return $this;
     }
 
     /**

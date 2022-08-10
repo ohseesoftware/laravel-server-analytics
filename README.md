@@ -79,9 +79,7 @@ The default migration assumes you users are stored in a `users` table with a `BI
 When logging a request, the package will use this code to insert the `user_id` into the `analytics` table:
 
 ```php
-if ($user = $request->user()) {
-    $userId = $user->id;
-}
+$userId = $request->user()?->id ?? null
 ```
 
 ### Excluding Routes
@@ -133,104 +131,38 @@ return [
 ];
 ```
 
-### Post Request Hooks
+### Request hooks
 
-We provide an optional hook you can use to run custom logic after an analytics record has been created. You can provide as many hooks as you want, calling `addPostHook` will add a new hook rather than replace existing hooks.
+We provide took optional hooks that you can use to automatically associate extra data with your analytics records: `addMetaHook` and `addRelationHook`. Both hooks return an array of data that should be associated to the analytics record. You can add as many of each as you'd like throughout your request's lifecycle.
 
-The hook closure is based an instance of `RequestDetails` and the `Analytics` record that was created for the request. You can access both the request and response inside the `RequestDetails` class. If you're using a custom `RequestDetails` class, you'll be given an instance of your custom class.
+`addMetaHook` example:
 
 ```php
-// AppServiceProvider
-
-use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
-use OhSeeSoftware\LaravelServerAnalytics\RequestDetails;
-use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
-
-public function boot()
-{
-    ServerAnalytics::addPostHook(
-        function (RequestDetails $requestDetails, Analytics $analytics) {
-            // Do whatever you want with the request, response, and created analytics record
-        }
-    );
-}
+ServerAnalytics::addMetaHook(function (RequestDetails $requestDetails) {
+    return [
+        'key' => 'some-key',
+        'value' => 'some-value'
+    ];
+});
 ```
 
-### Attach Entities to Analytics Records
-
-If you want to attach your application's entities to an analytics record, you can use the `addRelation(Model $model, ?string $reason = null)` on the Analytics model in combination with a hook:
+`addRelationHook` example:
 
 ```php
-// AppServiceProvider
-
-use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
-use OhSeeSoftware\LaravelServerAnalytics\RequestDetails;
-use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
-
-public function boot()
-{
-    ServerAnalytics::addPostHook(
-        function (RequestDetails $requestDetails, Analytics $analytics) {
-            // Attach the logged-in user to the analytics request record
-            if ($user = $requestDetails->request->user()) {
-              $analytics->addRelation($user);
-            }
-        }
-    );
-}
+ServerAnalytics::addRelationHook(function (RequestDetails $requestDetails) use ($post) {
+    return [
+        'model' => $post,
+        'reason' => 'Post that was deleted.'
+    ];
+});
 ```
 
-There's also a helper method available if you want to attach a relation without checking the request, response, or analytics record:
+There's also helper methods available which call the above hooks for you:
 
 ```php
-// Controller
+ServerAnalytics::addMeta('test', 'value');
 
-use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
-
-public function __invoke(Post $post)
-{
-    ServerAnalytics::addRelation($post);
-
-    // ...finish controller logic
-}
-```
-
-The method provides an optional second argument, `$reason`, which allows you to add a reason for the relation attachment. The `reason` column is a `string, VARCHAR(255)` column. If not passed, the value will be `null`.
-
-### Attach Metadata to Analytics Records
-
-In addition to attaching entities to your analytics records, you can attach custom metadata (key/value).
-
-```php
-// AppServiceProvider
-
-use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
-use OhSeeSoftware\LaravelServerAnalytics\RequestDetails;
-use OhSeeSoftware\LaravelServerAnalytics\Models\Analytics;
-
-public function boot()
-{
-    ServerAnalytics::addPostHook(
-        function (RequestDetails $requestDetails, Analytics $analytics) {
-            $analytics->addMeta('foo', 'bar');
-        }
-    );
-}
-```
-
-There's also a helper method available if you want to attach metadata without checking the request, response, or analytics record:
-
-```php
-// Controller
-
-use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
-
-public function __invoke(Post $post)
-{
-    ServerAnalytics::addMeta('some-key', 'some-value');
-
-    // ...finish controller logic
-}
+ServerAnalytics::addRelation($post);
 ```
 
 ### Providing Custom Request Details
@@ -247,21 +179,13 @@ class CustomRequestDetails extends RequestDetails
 {
     public function getMethod(): string
     {
+        // Set the stored `method` as "TEST" for all requests
         return 'TEST';
     }
 }
-
-// AppServiceProvider
-
-use OhSeeSoftware\LaravelServerAnalytics\Facades\ServerAnalytics;
-
-public function boot()
-{
-    ServerAnalytics::setRequestDetails(new CustomRequestDetails);
-}
 ```
 
-With the above example, the `method` variable for every request will be set to "TEST".
+There's a config value, `request_details_class`, which you can set to the FQN of your request details class. We will attempt to resolve that class out of the container when logging requests.
 
 ### Querying Analytics Records
 

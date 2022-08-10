@@ -18,9 +18,11 @@
         }
     ],
     "require": {
-        "php": ">=7.3",
+        "php": ">=8.0",
         "doctrine/dbal": "^3.1",
-        "illuminate/support": ">=6",
+        "illuminate/bus": ">=8",
+        "illuminate/queue": ">=8",
+        "illuminate/support": ">=8",
         "jaybizzle/crawler-detect": "^1.2"
     },
     "require-dev": {

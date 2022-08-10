@@ -2,7 +2,6 @@
 
 namespace OhSeeSoftware\LaravelServerAnalytics;
 
-use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
@@ -11,9 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class LaravelServerAnalytics
 {
-    /** @var RequestDetails */
-    public $requestDetails;
-
     /** @var array */
     public $excludeRoutes = [];
 
@@ -21,17 +17,13 @@ class LaravelServerAnalytics
     public $excludeMethods = [];
 
     /** @var array */
-    public $postHooks = [];
+    public $metaHooks = [];
 
-    public function __construct()
-    {
-        $this->setRequestDetails(resolve(RequestDetails::class));
-    }
+    /** @var array */
+    public $relationHooks = [];
 
     /**
      * Returns the class which represents users.
-     *
-     * @return string
      */
     public static function getUserModel(): string
     {
@@ -40,8 +32,6 @@ class LaravelServerAnalytics
 
     /**
      * Indicates if we should ignore requests from bots.
-     *
-     * @return bool
      */
     public static function shouldIgnoreBotRequests(): bool
     {
@@ -51,8 +41,6 @@ class LaravelServerAnalytics
 
     /**
      * Returns the name of the analytics data table.
-     *
-     * @return string
      */
     public static function getAnalyticsDataTable(): string
     {
@@ -61,8 +49,6 @@ class LaravelServerAnalytics
 
     /**
      * Returns the name of the analytics relation table.
-     *
-     * @return string
      */
     public static function getAnalyticsRelationTable(): string
     {
@@ -71,8 +57,6 @@ class LaravelServerAnalytics
 
     /**
      * Returns the name of the analytics meta table.
-     *
-     * @return string
      */
     public static function getAnalyticsMetaTable(): string
     {
@@ -80,23 +64,22 @@ class LaravelServerAnalytics
     }
 
     /**
-     * Sets the request details class.
-     *
-     * @param RequestDetails
-     * @return void
+     * Returns the FQN of the RequestDetails class to user.
      */
-    public function setRequestDetails(RequestDetails $requestDetails): void
+    public static function getRequestDetailsClass(): string
     {
-        $this->requestDetails = $requestDetails;
+        return config('laravel-server-analytics.request_details_class');
+    }
+
+    public static function getQueueConnection(): string|null
+    {
+        return config('laravel-server-analytics.queue_connection', null);
     }
 
     /**
      * Add routes to exclude from tracking.
      *
      * Routes can use wildcard matching.
-     *
-     * @param array $routes
-     * @return void
      */
     public function addRouteExclusions(array $routes): void
     {
@@ -105,9 +88,6 @@ class LaravelServerAnalytics
 
     /**
      * Add methods to exclude from tracking.
-     *
-     * @param array $methods
-     * @return void
      */
     public function addMethodExclusions(array $methods): void
     {
@@ -120,9 +100,6 @@ class LaravelServerAnalytics
 
     /**
      * Determine if the request should be tracked.
-     *
-     * @param Request $request
-     * @return boolean
      */
     public function shouldTrackRequest(Request $request): bool
     {
@@ -138,51 +115,73 @@ class LaravelServerAnalytics
     }
 
     /**
-     * Adds a new post hook.
+     * Add a hook for storing meta data with the Analytics record.
      *
-     * @param Closure
-     * @return void
+     * The hook should return an array with `key` and `value` keys.
      */
-    public function addPostHook($callback): void
+    public function addMetaHook($callback): void
     {
-        $this->postHooks[] = $callback;
+        $this->metaHooks[] = $callback;
+    }
+
+    public function getMetaHooks(): array
+    {
+        return $this->metaHooks;
+    }
+
+    public function runMetaHooks(RequestDetails $requestDetails): array
+    {
+        return collect($this->metaHooks)
+            ->map(function ($callback) use ($requestDetails) {
+                return $callback($requestDetails);
+            })
+            ->toArray();
     }
 
     /**
-     * Clears the post hooks.
+     * Add a hook for storing meta data with the Analytics record.
      *
-     * @return void
+     * The hook should return an array with `model` and `reason` keys.
      */
-    public function clearPostHooks(): void
+    public function addRelationHook($callback): void
     {
-        $this->postHooks = [];
+        $this->relationHooks[] = $callback;
     }
 
-    /**
-     * Relates the given Model to the current analytics record.
-     *
-     * @param Model $model
-     * @param string|null $reason
-     * @return void
-     */
+    public function getRelationHooks(): array
+    {
+        return $this->relationHooks;
+    }
+
+    public function runRelationHooks(RequestDetails $requestDetails): array
+    {
+        return collect($this->relationHooks)
+            ->map(function ($callback) use ($requestDetails) {
+                return $callback($requestDetails);
+            })
+            ->toArray();
+    }
+
     public function addRelation(Model $model, ?string $reason = null): void
     {
-        $this->addPostHook(function (RequestDetails $requestDetails, Analytics $analytics) use ($model, $reason) {
-            $analytics->addRelation($model, $reason);
+        $this->addRelationHook(function (RequestDetails $requestDetails) use ($model, $reason) {
+            return [
+                'model' => $model,
+                'reason' => $reason,
+            ];
         });
     }
 
     /**
      * Attaches the given meta to the current analytics record.
-     *
-     * @param string $key
-     * @param mixed $value
-     * @return void
      */
     public function addMeta(string $key, $value): void
     {
-        $this->addPostHook(function (RequestDetails $requestDetails, Analytics $analytics) use ($key, $value) {
-            $analytics->addMeta($key, $value);
+        $this->addMetaHook(function (RequestDetails $requestDetails) use ($key, $value) {
+            return [
+                'key' => $key,
+                'value' => $value,
+            ];
         });
     }
 
@@ -217,47 +216,5 @@ class LaravelServerAnalytics
     {
         $method = strtoupper($request->method());
         return in_array($method, $this->excludeMethods);
-    }
-
-    /**
-     * Logs the request.
-     *
-     * @param Request $request
-     * @param Response $response
-     * @return Analytics
-     */
-    public function logRequest(Request $request, Response $response): Analytics
-    {
-        $this->requestDetails->setRequest($request);
-        $this->requestDetails->setResponse($response);
-
-        $duration = 0;
-        if ($request->analyticsRequestStartTime) {
-            $duration = round(microtime(true) * 1000) - $request->analyticsRequestStartTime;
-        }
-
-        $userId = null;
-        if ($user = $request->user()) {
-            $userId = $user->id;
-        }
-
-        $analytics = Analytics::create([
-            'user_id'      => $userId,
-            'method'       => $this->requestDetails->getMethod(),
-            'host'         => $this->requestDetails->getHost(),
-            'path'         => $this->requestDetails->getPath(),
-            'status_code'  => $this->requestDetails->getStatusCode(),
-            'user_agent'   => $this->requestDetails->getUserAgent(),
-            'ip_address'   => $this->requestDetails->getIpAddress(),
-            'referrer'     => $this->requestDetails->getReferrer(),
-            'query_params' => $this->requestDetails->getQueryParams(),
-            'duration_ms'  => $duration
-        ]);
-
-        foreach ($this->postHooks as $hook) {
-            call_user_func($hook, $this->requestDetails, $analytics);
-        }
-
-        return $analytics;
     }
 }

@@ -28,5 +28,19 @@ return [
      * Controls whether or not the page views
      * from bots will be recorded.
      */
-    'ignore_bot_requests' => true
+    'ignore_bot_requests' => true,
+
+    /**
+     * The FQN of the class used to generate the details for the request.
+     */
+    'request_details_class' => \OhSeeSoftware\LaravelServerAnalytics\RequestDetails::class,
+
+    /**
+     * The name of the queue connection to use
+     * to process the analytics requests.
+     *
+     * If left null, the analytics records will
+     * be created synchronously at the end of the request.
+     */
+    'queue_connection' => null
 ];
