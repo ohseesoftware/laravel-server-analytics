@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        php: [7.3, 8.0]
+        php: [8.0]
     steps:
       - uses: actions/checkout@master
       - name: Checkout
