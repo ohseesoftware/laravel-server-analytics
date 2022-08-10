@@ -15,11 +15,9 @@ class AnalyticsMetaTest extends TestCase
     public function it_saves_meta_for_analytics()
     {
         // Given
-        ServerAnalytics::addPostHook(
-            function (RequestDetails $requestDetails, Analytics $analytics) {
-                $analytics->addMeta('test', '1234');
-            }
-        );
+        ServerAnalytics::addMetaHook(function (RequestDetails $requestDetails) {
+            return ['key' => 'test', 'value' => 1234];
+        });
 
         // When
         $this->get('/analytics');
